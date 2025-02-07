@@ -1,0 +1,5 @@
+#!/bin/bash -x
+
+CWD=$(pwd)
+docker run --rm -v ${CWD}:/flyway/project flyway/flyway ${*}
+

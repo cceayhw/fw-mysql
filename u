@@ -1,0 +1,7 @@
+#!/bin/bash -x
+
+CWD=$(pwd)
+
+fw -environments.dev.url="jdbc:sqlite://home/wellesley/work/flyway/fw-mysql/files/sakila.db" \
+-environment=dev \
+${*}

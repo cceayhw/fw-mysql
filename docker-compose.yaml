@@ -1,5 +1,4 @@
 ---
-version: '3.1'
 
 services:
   mysql:
@@ -12,9 +11,9 @@ services:
     ports:
       - "3306:3306"
       - "33060:33060"
-  sqlite:
-    image: alpine/sqlite:latest
-    restart: always
-    container_name: db-sqlite
-    hostname: db-sqlite
+  # sqlite:
+  #   image: alpine/sqlite:latest
+  #   restart: always
+  #   container_name: db-sqlite
+  #   hostname: db-sqlite
     

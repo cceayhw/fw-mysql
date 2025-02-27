@@ -2,7 +2,7 @@
 
 services:
   mysql:
-    image: mysql:latest
+    image: mysql:8.0
     restart: always
     environment:
       MYSQL_ROOT_PASSWORD: abc123
@@ -16,4 +16,7 @@ services:
   #   restart: always
   #   container_name: db-sqlite
   #   hostname: db-sqlite
-    
+
+networks:
+  default:
+    enable_ipv6: false

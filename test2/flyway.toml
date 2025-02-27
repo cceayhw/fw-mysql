@@ -1,0 +1,42 @@
+databaseType = "MySQL"
+id = "c66e2717-c975-4e9b-be9f-b93971d524b1"
+name = "dev01"
+
+[flyway]
+locations = [ "filesystem:migrations" ]
+mixed = true
+outOfOrder = false
+schemaModelLocation = "schema-model"
+validateMigrationNaming = true
+environment = "devhost"
+defaultSchema = "sakila"
+baselineMigrationPrefix	= "B"
+#sqlMigrationPrefix = "V"
+#sqlMigrationSeparator = "__"
+#encoding = "UTF-8"
+
+[flyway.check]
+majorTolerance = 0
+
+[flywayDesktop]
+developmentEnvironment = "development"
+shadowEnvironment = "shadow"
+
+[redgateCompare]
+filterFile = "filter.rgf"
+
+[redgateCompare.mysql.options.ignores]
+ignoreNewlinesInTextObjects = "off"
+
+[environments.dev1]
+url = "jdbc:mysql://localhost:3306/sakila?allowPublicKeyRetrieval=true"
+user = "root"
+password = "abc123"
+schemas = ["sakila"]
+
+
+[environments.devhost]
+url = "jdbc:mysql://db-mysql:3306/sakila?allowPublicKeyRetrieval=true"
+user = "root"
+password = "abc123"
+schemas = ["sakila"]

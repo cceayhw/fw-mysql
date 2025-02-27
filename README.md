@@ -46,3 +46,19 @@ fw into -environment=development
 https://github.com/flyway/flyway-docker/issues/117
 url = "jdbc:mysql://localhost:3306/sakila?allowPublicKeyRetrieval=true"
 
+
+
+working from blank
+  terraform to create blank schema, dbo user
+  test connection
+  if you have baseline scripts then name as Bx_y__<description>.sql in 1 file
+  file formats Vx_y__description.sql
+  fw migrate create fw table + first migration
+  version
+  fw migrate
+
+working from existing
+  test connection with dbo user
+  fw baseline to create baseline + fw table
+  version
+  fw migrate

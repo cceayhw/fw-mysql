@@ -1,0 +1,1 @@
+ALTER table TABLE1 ADD COL2 datetime NULL;

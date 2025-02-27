@@ -2,10 +2,18 @@
 url = "jdbc:mysql://localhost:3306/sakila?allowPublicKeyRetrieval=true"
 user = "root"
 password = "abc123"
+defaultSchema = "sakila"
+schemas = ["sakila"]
 
 [flyway]
-environment = "build"
+environment = "development"
 locations = ["filesystem:/home/wellesley/work/db/fw-mysql/sql"]
+validateMigrationNaming = true
+sqlMigrationPrefix = "V"
+sqlMigrationSeparator = "__"
+encoding = "UTF-8"
+
+
 # jarDirs = ["path/to/java/migrations"]
 
 [environments.build]

@@ -25,7 +25,7 @@ jobs:
           echo "count film table"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila -e "select count(*) from film;"
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila'; and TABLE_NAME like 'TABLE%'"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
       - name: first flyway deploy
         run: |
@@ -39,7 +39,7 @@ jobs:
       - name: verify migration
         run: |
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila'; and TABLE_NAME like 'TABLE%'"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
       - name: stop mysql
         env:

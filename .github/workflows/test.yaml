@@ -21,7 +21,7 @@ jobs:
           echo "create blank schema"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "create schema sakila;"
           echo "create table and populate data"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila < test2/migrations/B0_1__Create_tables.sql
+          docker exec -i db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila < test2/migrations/B0_1__Create_tables.sql
       - name: stop mysql
         env:
           MYS_USR: ${{ secrets.MYS_USR }}

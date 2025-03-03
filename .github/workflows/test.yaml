@@ -1,0 +1,18 @@
+---
+name: test-mysql
+on:
+  workflow_dispatch:
+
+jobs:
+  test-mysql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: start mysql
+        run: |
+          docker compose up -d
+          sleep 60
+          docker ps -a
+      - name: stop mysql
+        run: |
+          docker compose down

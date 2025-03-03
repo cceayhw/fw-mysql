@@ -23,6 +23,12 @@ jobs:
           echo "create table and populate data"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} < test2/migrations/B0_1__Create_tables.sql
       - name: stop mysql
+        env:
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select count(*) from film;"
+          echo "count film table"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select count(*) from sakila.film;"
+          echo "list tables in schema"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila'"
           docker compose down

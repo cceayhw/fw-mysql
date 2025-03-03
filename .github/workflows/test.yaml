@@ -27,6 +27,16 @@ jobs:
           echo "list tables in schema"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
+      - name: flyway baseline
+        run: |
+          docker run --rm --name fw-cli --network fw-mysql_default \
+          -v $(pwd)/test2:/flyway/project \
+          flyway/flyway \
+          -workingDirectory="project" \
+          -locations="filesystem:migrations" \
+          baseline
+
+
       - name: first flyway deploy
         run: |
           docker run --rm --name fw-cli --network fw-mysql_default \

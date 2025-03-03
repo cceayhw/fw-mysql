@@ -47,6 +47,9 @@ jobs:
           migrate
 
       - name: verify migration
+        env:
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
           echo "list tables in schema"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
@@ -62,6 +65,9 @@ jobs:
           migrate
 
       - name: verify migration
+        env:
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
           echo "list tables in schema"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"

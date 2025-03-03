@@ -28,7 +28,7 @@ jobs:
           MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
           echo "count film table"
-          #docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila -e "select count(*) from sakila.film;"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila -e "select count(*) from sakila.film;"
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila'"
+          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila';"
           docker compose down

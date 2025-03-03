@@ -15,8 +15,8 @@ jobs:
           docker ps -a
       - name: create blank schema
         env:
-          MYS_USR: ${{ secets.MYS_USR }}
-          MYS_PWD: ${{ secets.MYS_PWD }}
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
           echo "create blank schema"
           docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "create schema sakila;"

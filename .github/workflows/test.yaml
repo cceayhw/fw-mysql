@@ -17,15 +17,18 @@ jobs:
         env:
           MYS_USR: ${{ secrets.MYS_USR }}
           MYS_PWD: ${{ secrets.MYS_PWD }}
+          FW_USR: flyway_user
         run: |
-          echo "create blank schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "create schema sakila;"
+          echo "create blank schema and flyway_user"
+          docker exec -i db-mysql mysql -u${MYS_USR} -p${MYS_PWD} < ./init.sql
+          #docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "create schema sakila;"
+
           echo "create table and populate data"
-          docker exec -i db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila < test2/migrations/B0_1__Create_tables.sql
+          docker exec -i db-mysql mysql -${FW_USR} -p${MYS_PWD} -D sakila < test2/migrations/B0_1__Create_tables.sql
           echo "count film table"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -D sakila -e "select count(*) from film;"
+          docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -D sakila -e "select count(*) from film;"
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
+          docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
       - name: flyway baseline
         run: |
@@ -50,9 +53,10 @@ jobs:
         env:
           MYS_USR: ${{ secrets.MYS_USR }}
           MYS_PWD: ${{ secrets.MYS_PWD }}
+          FW_USR: flyway_user
         run: |
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
+          docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
 
       - name: second flyway deploy
@@ -68,13 +72,11 @@ jobs:
         env:
           MYS_USR: ${{ secrets.MYS_USR }}
           MYS_PWD: ${{ secrets.MYS_PWD }}
+          FW_USR: flyway_user
         run: |
           echo "list tables in schema"
-          docker exec db-mysql mysql -u${MYS_USR} -p${MYS_PWD} -e "select * from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
+          docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
       - name: stop mysql
-        env:
-          MYS_USR: ${{ secrets.MYS_USR }}
-          MYS_PWD: ${{ secrets.MYS_PWD }}
         run: |
           docker compose down

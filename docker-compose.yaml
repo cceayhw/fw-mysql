@@ -4,6 +4,8 @@ services:
   mysql:
     image: mysql:8.0
     restart: always
+    # volumes:
+    #   - /home/runner:/tmp/workdir
     environment:
       MYSQL_ROOT_PASSWORD: abc123
     container_name: db-mysql

@@ -1,0 +1,105 @@
+---
+name: test-mysql
+on:
+  workflow_dispatch:
+
+jobs:
+  test-mysql:
+    runs-on: ubuntu-latest
+
+    services:
+      db-mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.MYS_PWD }}
+        ports:
+          - 3306:3306
+          - 33060:33060
+        options: >-
+          --health-cmd="mysqladmin ping"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=3
+
+    steps:
+      - uses: actions/checkout@v4
+      # - name: setup maven
+      #   uses: s4u/setup-maven-action@v1.18.0
+      # - name: get jdbc drivers
+      #   run: |
+      #     mvn dependency:resolve
+      #     ln -s $HOME/.m2/repository/org/postgresql/postgresql/42.7.5/postgresql-42.7.5.jar drivers/postgresql-42.7.5.jar
+      #     ln -s $HOME/.m2/repository/com/mysql/mysql-connector-j/9.2.0/mysql-connector-j-9.2.0.jar drivers/mysql-connector-j-9.2.0.jar
+
+      - name: get mysql client
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libcurl4-openssl-dev libmysqlclient-dev libgirepository1.0-dev
+      - name: confirm db running
+        run: |
+          sleep 5
+          docker ps -a
+          docker network ls
+      
+      - name: create blank schema
+        env:
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
+          FW_USR: flyway_user
+        run: |
+          echo "create blank schema and flyway_user"
+          mysql --host=127.0.0.1 -uroot -p${MYS_PWD} < ./init.sql
+          #docker exec -i db-mysql mysql -u${MYS_USR} -p${MYS_PWD} < ./init.sql
+
+          echo "create table and populate data"
+          mysql --host=127.0.0.1 -u${FW_USR} -p${MYS_PWD} -D sakila < test2/migrations/B0_1__Create_tables.sql
+          echo "count film table"
+          mysql --host=127.0.0.1 -u${FW_USR} -p${MYS_PWD} -D sakila -e "select count(*) from film;"
+          echo "list tables in schema"
+          mysql --host=127.0.0.1 -u${FW_USR} -p${MYS_PWD} -D sakila -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
+
+      # - name: flyway baseline
+      #   env:
+      #     MYS_USR: ${{ secrets.MYS_USR }}
+      #     MYS_PWD: ${{ secrets.MYS_PWD }}
+      #     FW_USR: flyway_user
+      #   run: |
+      #     docker run --rm --name fw-cli -v $(pwd):/flyway/project \
+      #     flyway/flyway \
+      #     -workingDirectory="project" \
+      #     -locations="filesystem:migrations" \
+      #     -environments.development.user="${MYS_USR}" \
+      #     -environments.development.password="${MYS_PWD}" \
+      #     baseline
+
+      # - name: first flyway deploy
+      #   run: |
+      #     docker run --rm --name fw-cli -v $(pwd):/flyway/project \
+      #     flyway/flyway \
+      #     -workingDirectory="project" \
+      #     -locations="filesystem:migrations" \
+      #     migrate
+      # - name: verify migration
+      #   env:
+      #     MYS_USR: ${{ secrets.MYS_USR }}
+      #     MYS_PWD: ${{ secrets.MYS_PWD }}
+      #     FW_USR: flyway_user
+      #   run: |
+      #     echo "list tables in schema"
+      #     docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
+
+      # - name: second flyway deploy
+      #   run: |
+      #     docker run --rm --name fw-cli -v $(pwd):/flyway/project \
+      #     flyway/flyway \
+      #     -workingDirectory="project" \
+      #     -locations="filesystem:migrations_v2" \
+      #     migrate
+      # - name: verify migration
+      #   env:
+      #     MYS_USR: ${{ secrets.MYS_USR }}
+      #     MYS_PWD: ${{ secrets.MYS_PWD }}
+      #     FW_USR: flyway_user
+      #   run: |
+      #     echo "list tables in schema"
+      #     docker exec db-mysql mysql -u${FW_USR} -p${MYS_PWD} -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"

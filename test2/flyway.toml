@@ -44,7 +44,7 @@ schemas = ["sakila"]
 
 [environments.development]
 url = "jdbc:mysql://localhost:3306/sakila?allowPublicKeyRetrieval=true"
-user = "flyway_user"
-password = "abc123"
+user = ""
+password = ""
 defaultSchema = "sakila"
 schemas = ["sakila"]

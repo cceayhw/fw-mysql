@@ -1,5 +1,5 @@
 ---
-name: test-mysql
+name: test-mysqlv2
 on:
   workflow_dispatch:
 

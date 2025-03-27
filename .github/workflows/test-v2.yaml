@@ -20,7 +20,9 @@ jobs:
           --health-interval=10s
           --health-timeout=5s
           --health-retries=3
-
+    container:
+      image: flyway/flyway:latest
+      volumes:
     steps:
       - uses: actions/checkout@v4
       # - name: setup maven
@@ -58,19 +60,20 @@ jobs:
           echo "list tables in schema"
           mysql --host=127.0.0.1 -u${FW_USR} -p${MYS_PWD} -D sakila -e "select table_name from information_schema.TABLES where TABLE_SCHEMA = 'sakila' and TABLE_NAME like 'TABLE%';"
 
-      # - name: flyway baseline
-      #   env:
-      #     MYS_USR: ${{ secrets.MYS_USR }}
-      #     MYS_PWD: ${{ secrets.MYS_PWD }}
-      #     FW_USR: flyway_user
-      #   run: |
-      #     docker run --rm --name fw-cli -v $(pwd):/flyway/project \
-      #     flyway/flyway \
-      #     -workingDirectory="project" \
-      #     -locations="filesystem:migrations" \
-      #     -environments.development.user="${MYS_USR}" \
-      #     -environments.development.password="${MYS_PWD}" \
-      #     baseline
+      - name: flyway baseline
+        env:
+          MYS_USR: ${{ secrets.MYS_USR }}
+          MYS_PWD: ${{ secrets.MYS_PWD }}
+          FW_USR: flyway_user
+        run: |
+          docker network ls | grep "github_network" | awk '{print $2}'
+          # docker run --rm --name fw-cli -v $(pwd):/flyway/project \
+          # flyway/flyway \
+          # -workingDirectory="project" \
+          # -locations="filesystem:migrations" \
+          # -environments.development.user="${MYS_USR}" \
+          # -environments.development.password="${MYS_PWD}" \
+          # baseline
 
       # - name: first flyway deploy
       #   run: |

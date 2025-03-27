@@ -65,14 +65,14 @@ jobs:
           MYS_PWD: ${{ secrets.MYS_PWD }}
           FW_USR: flyway_user
         run: |
-          docker network ls | grep "github_network" | awk '{print $2}'
-          # docker run --rm --name fw-cli -v $(pwd):/flyway/project \
-          # flyway/flyway \
-          # -workingDirectory="project" \
-          # -locations="filesystem:migrations" \
-          # -environments.development.user="${MYS_USR}" \
-          # -environments.development.password="${MYS_PWD}" \
-          # baseline
+          BRIDGE=$(docker network ls | grep "github_network" | awk '{print $2}')
+          docker run --rm --name fw-cli --network ${BRIDGE} -v $(pwd):/flyway/project \
+          flyway/flyway \
+          -workingDirectory="project" \
+          -locations="filesystem:migrations" \
+          -environments.development.user="${MYS_USR}" \
+          -environments.development.password="${MYS_PWD}" \
+          baseline
 
       # - name: first flyway deploy
       #   run: |

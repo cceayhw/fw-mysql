@@ -40,3 +40,11 @@ url = "jdbc:mysql://db-mysql:3306/sakila?allowPublicKeyRetrieval=true"
 user = "root"
 password = "abc123"
 schemas = ["sakila"]
+
+
+[environments.development]
+url = "jdbc:mysql://127.0.0.1:3306/sakila?allowPublicKeyRetrieval=true"
+user = ""
+password = ""
+defaultSchema = "sakila"
+schemas = ["sakila"]

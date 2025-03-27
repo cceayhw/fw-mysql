@@ -66,7 +66,8 @@ jobs:
           FW_USR: flyway_user
         run: |
           BRIDGE=$(docker network ls | grep "github_network" | awk '{print $2}')
-          docker run --rm --name fw-cli --network ${BRIDGE} -v $(pwd):/flyway/project \
+          echo ${BRIDGE}
+          docker run --rm --name fw-cli --network ${BRIDGE} -v $(pwd)/test2:/flyway/project \
           flyway/flyway \
           -workingDirectory="project" \
           -locations="filesystem:migrations" \

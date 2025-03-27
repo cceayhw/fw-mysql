@@ -69,6 +69,7 @@ jobs:
           echo ${BRIDGE}
           docker run --rm --name fw-cli --network ${BRIDGE} -v $(pwd)/test2:/flyway/project \
           flyway/flyway \
+          -environment="development" \
           -workingDirectory="project" \
           -locations="filesystem:migrations" \
           baseline

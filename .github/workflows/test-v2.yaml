@@ -71,8 +71,6 @@ jobs:
           flyway/flyway \
           -workingDirectory="project" \
           -locations="filesystem:migrations" \
-          -environments.development.user="${FW_USR}" \
-          -environments.development.password="${MYS_PWD}" \
           baseline
 
       # - name: first flyway deploy
